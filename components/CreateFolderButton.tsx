@@ -1,10 +1,12 @@
-import React from 'react'
+"use client"
 import { Button } from './ui/button'
 import { FaRegFolder } from "react-icons/fa6";
+import { useModalStore } from '@/store/use-modal';
 
 const CreateFolderButton = () => {
+   const {OnOpen} = useModalStore()
   return (
-    <Button variant={"outline"} className='space-x-1' >
+    <Button variant={"outline"} className='space-x-1' onClick={() =>OnOpen("createFolder")} >
   
   <FaRegFolder size={15} />
     <span className=' font-semibold text-lg'>Create folder</span>
