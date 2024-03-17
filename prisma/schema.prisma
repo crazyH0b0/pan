@@ -1,62 +1,60 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+generator client {
+  provider = "prisma-client-js"
 }
 
 model User {
   id       String @id @default(uuid())
   username String
-  email    String @unique
-  imageUrl String @db.Text
-
-  folders        Folder[]
-  files          File[]
-  createdFolders CreatedFoler[]
-}
-
-model Folder {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isDeleted Boolean  @default(false)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  files          File[]
-  createdFolerId String
-  createdFoler   CreatedFoler @relation(fields: [createdFolerId], references: [id])
+  files    File[]  // 这将建立一个 User 到多个 File 的关系
 }
 
 model File {
-  id        String   @id @default(uuid())
+  fileId    String   @id @default(uuid())
   name      String
-  fileType  String
-  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id]) // 这定义了 File 到 User 的关系，并指定了外键
+  url       String?
+  suffix    String?
+  parentId  String
+  type      String
+  isDeleted Boolean? @default(false)
   updatedAt DateTime @updatedAt
-  isDeleted Boolean  @default(false)
-  src       String
-
-  folderId String
-  folder   Folder @relation(fields: [folderId], references: [id])
-
-  userId  String
-  user_id User   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
+// model File {
+//   fileId   String @id @default(uuid())
+//   fileName String
+//   url      String
+//   suffix   String
+//   parentId String
 
-model CreatedFoler {
-  id      String   @id @default(uuid())
-  folders Folder[]
+//   folderId String
+//   Folder   Folder @relation(fields: [folderId], references: [folderId])
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-}
+//   isDeleted Boolean @default(false)
+
+//   updatedAt DateTime @updatedAt
+//   createdAt DateTime @default(now())
+// }
+
+// model Folder {
+//   folderId   String   @id @default(uuid())
+//   folderName String
+//   files      File[]
+//   parentId   String
+//   updatedAt  DateTime @updatedAt
+//   createdAt  DateTime @default(now())
+// }
+
+// model UserFiles {
+//   id     String @id @default(uuid())
+//   userId String
+// }
