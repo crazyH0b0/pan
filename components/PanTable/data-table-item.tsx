@@ -8,8 +8,10 @@ import ContextMenuWrapper from '../ContextMenuWrapper';
 import TooltipWrapper from '../TooltipWrapper';
 import { File } from '@prisma/client';
 import { parse, format } from 'date-fns';
+import { useRouter } from 'next/navigation';
 
 const DataTableItem = ({ folder }: { folder: File }) => {
+  const router = useRouter();
   const { setSelectedFolders, selectedFolders } = useFolderStore();
   const isChecked = selectedFolders?.includes(folder);
 
@@ -20,6 +22,9 @@ const DataTableItem = ({ folder }: { folder: File }) => {
   }
 
   const formattedDate = format(folder.createdAt, 'yyyy-MM-dd HH:mm');
+  const handleViewFolder = () => {
+    router.push(`/pan/${folder.parentId}/${folder.name}`);
+  };
   // const [mounted, setMounted] = React.useState(false);
   // React.useEffect(() => {
   //   setMounted(true);
@@ -29,6 +34,7 @@ const DataTableItem = ({ folder }: { folder: File }) => {
     <ContextMenuWrapper folder={folder}>
       <TooltipWrapper dispalyName={folder.name}>
         <div
+          onDoubleClick={handleViewFolder}
           key={folder.fileId}
           className={cn(
             'relative group transition duration-75 cursor-pointer pb-3 rounded-xl hover:bg-[#f5f5f5] hover:dark:bg-[#262626] flex flex-col items-center',

@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import dynamic from 'next/dynamic';
 import FolderSkeleton from '../Skelton/FolderSkeleton';
 import { File } from '@prisma/client';
+import { setFilePath } from '@/store/use-file-path';
 const DynamicComponentWithNoSSR = dynamic(() => import('./data-table-item'), {
   loading: () => <FolderSkeleton></FolderSkeleton>,
   ssr: false,
@@ -13,12 +14,12 @@ const DynamicComponentWithNoSSR = dynamic(() => import('./data-table-item'), {
 
 interface DataTableDemoProps {
   files: File[];
+  slug: string[];
 }
 
-function DataTableDemo({ files }: DataTableDemoProps) {
+function DataTableDemo({ files, slug }: DataTableDemoProps) {
   const { selectedFolders, setSelectedFolders, clearSelectedFolders } = useFolderStore();
-
-  // if (files.length === 0) return <div>empty</div>;
+  setFilePath(slug);
   return (
     <div>
       <div className="flex justify-between items-center ">

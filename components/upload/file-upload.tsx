@@ -6,8 +6,10 @@ import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-
+import { useRouter } from 'next/navigation';
+import useFilePathStore from '@/store/use-file-path';
 export const FileUpload = () => {
+  const { path } = useFilePathStore();
   const [files, setFiles] = React.useState<File[]>([]);
   const [isUploading, setIsUploading] = React.useState(false);
   const [progressInfos, setprogressInfos] = React.useState<{ status: string; filename: string }[]>([]);
@@ -22,6 +24,7 @@ export const FileUpload = () => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('path', '/');
+        formData.append('parentId', path.join('/'));
         try {
           let response: any = await fetch('/api/folder', {
             method: 'POST',
@@ -37,28 +40,6 @@ export const FileUpload = () => {
           setprogressInfos((preProgressInfos) => [...preProgressInfos, ..._progressInfos]);
           setIsUploading(false);
         }
-
-        // try {
-        //   let response: any = await fetch('http://localhost:8090/hdfs/upload', {
-        //     method: 'POST',
-        //     body: formData,
-        //   });
-        //   if (response.ok) {
-        //     const data = await response.json();
-        //     if (data.code === 20000) {
-        //       _progressInfos[index].status = 'success';
-        //       toast(data.message);
-        //     } else {
-        //       _progressInfos[index].status = 'error';
-        //     }
-        //   }
-        // } catch (error) {
-        //   _progressInfos[index].status = 'error';
-        // } finally {
-        //   _progressInfos[index].filename = file.name;
-        //   setprogressInfos((preProgressInfos) => [...preProgressInfos, ..._progressInfos]);
-        //   setIsUploading(false);
-        // }
       });
     },
     [files, progressInfos]

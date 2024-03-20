@@ -1,12 +1,17 @@
-import { authMiddleware } from "@clerk/nextjs";
+import type { NextRequest } from 'next/server';
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-  publicRoutes: ["/api/uploadthing"],
-});
+export function middleware(request: NextRequest) {
+  const currentUser = request.cookies.get('user')?.value;
+
+  if (currentUser && !request.nextUrl.pathname.startsWith('/pan/list')) {
+    return Response.redirect(new URL('/pan/list', request.url));
+  }
+
+  if (!currentUser && !request.nextUrl.pathname.startsWith('/login')) {
+    return Response.redirect(new URL('/login', request.url));
+  }
+}
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 };

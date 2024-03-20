@@ -1,21 +1,28 @@
 import prisma from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs';
+import { User } from '@prisma/client';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
+  const cookieStore = cookies();
+  const currentUser = JSON.parse(cookieStore.get('user')?.value!) as User;
+  const pan = await prisma.pan.findUnique({
+    where: {
+      userId: currentUser.id,
+    },
+  });
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
+    const parentId = formData.get('parentId') as string;
     if (!file) return new NextResponse('Internal Error', { status: 500 });
-
     const type = file.name.split('.')[1];
-    const user = await currentUser();
-
-    if (!user) return new NextResponse('Unauthorized', { status: 401 });
     let response: any = await fetch('http://localhost:8090/hdfs/upload', {
       method: 'POST',
       body: formData,
     });
+
     if (response.ok) {
       response = await response.json();
       const { code, message } = response;
@@ -23,10 +30,9 @@ export async function POST(req: Request) {
         await prisma.file.create({
           data: {
             name: file.name,
-            userId: user.firstName || '用户2211',
-            url: 'www.baidu.com',
+            panId: pan?.id as string,
             type,
-            parentId: '',
+            parentId: parentId,
           },
         });
         return NextResponse.json({ status: code, message });

@@ -8,41 +8,44 @@ import dynamic from 'next/dynamic';
 import AsyncCp from '@/components/PanTable/AsyncCp';
 
 import DataTableDemo from '@/components/PanTable/data-table';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 // const AsyncDataTable = React.lazy(() => import('@/components/PanTable/data-table'));
 // const Dashboard = dynamic(() => import('@/components/PanTable/data-table'), {
 //   suspense: true,
 //   ssr: false,
 // });
 
-const page = async () => {
-  const user = await currentUser();
+const page = async ({ params }: { params: { slug: string[] } }) => {
+  const slug = params.slug;
+  const cookieStore = cookies();
+  const currentUser = JSON.parse(cookieStore.get('user')?.value!) as User;
+  // const user = await currentUser();
   let dbUser = null;
-  if (!user) return redirectToSignIn();
   dbUser = await prisma.user.findUnique({
     where: {
-      id: user.id,
+      id: currentUser.id,
     },
   });
-  // if (!dbUser) {
-  //   dbUser = await prisma.user.create({
-  //     data: {
-  //       username: user?.username || 'undefined',
-  //       id: user.id,
-  //     },
-  //   });
-  // }
+  if (!currentUser || !dbUser) return redirect('/login');
+  const pan = (await prisma.pan.findUnique({
+    where: {
+      userId: dbUser.id,
+    },
+  })) as any;
+
   const files = await prisma.file.findMany({
     where: {
-      // type: 'folder',
-      // parentId: '',
-      // userId: dbUser.id,
+      panId: pan.id,
+      isDeleted: false,
+      parentId: slug.join('/'),
     },
   });
 
   return (
     <ScrollArea className="h-[560px] rounded-md border p-4">
-      <DataTableDemo files={files} />
+      <DataTableDemo files={files} slug={slug} />
     </ScrollArea>
   );
 };

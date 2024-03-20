@@ -1,11 +1,12 @@
 import React from 'react';
+import { z } from "zod"
+import Login from './_component/login/login';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Register from './_component/register/register';
 
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+ 
 
-const page = () => {
+const page =async () => {
   return (
     <div>
       <div className="w-full min-h-screen flex items-center justify-center px-4">
@@ -13,33 +14,22 @@ const page = () => {
           <div className="space-y-2 text-center">
             <CloudIcon className="mx-auto h-12 w-12" />
             <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold">欢迎登录</h1>
+              <h1 className="text-3xl font-bold">欢迎</h1>
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">邮箱</Label>
-              <Input id="email" placeholder="m@example.com" required type="email" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">密码</Label>
-                <Link className="ml-auto inline-block text-sm underline" href="#">
-                  忘记密码？
-                </Link>
-              </div>
-              <Input id="password" required type="password" />
-            </div>
-            <Button className="w-full">登录</Button>
-          </div>
-          <div className="space-y-4 text-sm">
-            <Link
-              className="w-full inline-block p-2 rounded-md border border-gray-200 border-gray-200 text-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-              href="#"
-            >
-              注册账号
-            </Link>
-          </div>
+          <Tabs defaultValue="login" className="w-[400px]">
+  <TabsList>
+    <TabsTrigger value="login">登录</TabsTrigger>
+    <TabsTrigger value="register">注册</TabsTrigger>
+  </TabsList>
+  <TabsContent value="login">          <Login  />
+</TabsContent>
+  <TabsContent value="register">
+<Register />
+
+  </TabsContent>
+</Tabs>
+
         </div>
       </div>
     </div>
@@ -48,7 +38,7 @@ const page = () => {
 
 export default page;
 
-function CloudIcon(props) {
+function CloudIcon(props: any) {
   return (
     <svg
       {...props}

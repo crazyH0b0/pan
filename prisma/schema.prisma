@@ -3,7 +3,8 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -12,15 +13,22 @@ generator client {
 
 model User {
   id       String @id @default(uuid())
-  username String
-  files    File[]  // 这将建立一个 User 到多个 File 的关系
+  username String @unique
+  pan Pan?
+}
+
+model Pan {
+  id       String @id @default(uuid())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @unique
+  files    File[]
 }
 
 model File {
   fileId    String   @id @default(uuid())
   name      String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id]) // 这定义了 File 到 User 的关系，并指定了外键
+  panId     String
+  pan       Pan      @relation(fields: [panId], references: [id])
   url       String?
   suffix    String?
   parentId  String

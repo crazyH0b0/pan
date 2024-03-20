@@ -13,6 +13,9 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useRouter } from 'next/navigation';
+import useFilePathStore from '@/store/use-file-path';
+import { createFolder } from '@/app/actions/create-folder';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -21,8 +24,9 @@ const formSchema = z.object({
 });
 
 const CreateFolderModal = () => {
-  const router = useRouter();
+  const { path } = useFilePathStore();
   const { folders } = useFolderStore();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,23 +42,17 @@ const CreateFolderModal = () => {
   const isModalOpen = isOpen && type === 'createFolder';
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const file = await axios.post('/api/folder', { ...values, parentId: '' });
-      addFolder(file);
+      const folder = await createFolder(values.name, path.join('/'));
       form.reset();
+      toast('文件夹创建成功');
       router.refresh();
       window.location.reload();
       onClose();
-    } catch (error) {}
-    // addFolder({
-    //   id: crypto.randomUUID(),
-    //   size: '_',
-    //   createdAt: '2023-01-01',
-    //   fileName: values.folderName,
-    // });
+    } catch (error) {
+      toast('文件夹创建失败');
+    }
     form.reset();
     onClose();
-    // router.refresh()
-    // window.location.reload()
   };
   const handleModalClose = () => {
     form.reset();
