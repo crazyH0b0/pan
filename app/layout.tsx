@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 // import "@uploadthing/react/styles.css";
 import { Inter } from 'next/font/google';
 import { Inter as FontSans } from 'next/font/google';
-import { ClerkProvider } from '@clerk/nextjs';
+// import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/sonner';
 
 import './globals.css';
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    // <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
@@ -33,6 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Toaster />
         </body>
       </html>
-    </ClerkProvider>
+    // </ClerkProvider>
   );
 }

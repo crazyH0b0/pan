@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModeToggle } from './ModeToggle';
-import { UserButton } from '@clerk/nextjs';
+// import { UserButton } from '@clerk/nextjs';
 import Logo from './Logo';
 
 const PanHeader = () => {
@@ -9,7 +9,7 @@ const PanHeader = () => {
       <Logo />
       <div className="flex gap-4 items-center">
         <ModeToggle />
-        <UserButton afterSignOutUrl="/" />
+        {/* <UserButton afterSignOutUrl="/" /> */}
       </div>
     </nav>
   );

@@ -26,6 +26,6 @@ export async function createFolder(folderName: string, parentId: string) {
       name: folderName,
       type: 'folder',
     },
-  });
+  });  
   return folder;
 }

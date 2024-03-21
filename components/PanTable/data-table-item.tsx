@@ -9,11 +9,13 @@ import TooltipWrapper from '../TooltipWrapper';
 import { File } from '@prisma/client';
 import { parse, format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import useFilePathStore from '@/store/use-file-path';
 
 const DataTableItem = ({ folder }: { folder: File }) => {
   const router = useRouter();
   const { setSelectedFolders, selectedFolders } = useFolderStore();
   const isChecked = selectedFolders?.includes(folder);
+  const path = useFilePathStore(state => state.path)
 
   function onCheckedChange(checked: boolean) {
     const filterSelectedFolders = selectedFolders?.filter((value) => value !== folder);
@@ -23,7 +25,11 @@ const DataTableItem = ({ folder }: { folder: File }) => {
 
   const formattedDate = format(folder.createdAt, 'yyyy-MM-dd HH:mm');
   const handleViewFolder = () => {
-    router.push(`/pan/${folder.parentId}/${folder.name}`);
+    const newPath = [...path]
+    newPath.push(`${folder.fileId}&${folder.name}`)
+    const newPathArr = newPath.join("/")
+    router.push(newPathArr)
+    // router.push(`/pan/list/${folder.name}`);
   };
   // const [mounted, setMounted] = React.useState(false);
   // React.useEffect(() => {
@@ -47,7 +53,7 @@ const DataTableItem = ({ folder }: { folder: File }) => {
             onCheckedChange={(checked: boolean) => onCheckedChange(checked)}
           />
           {(folder.type === 'jpg' || folder.type === 'png') && <FcImageFile size={120} />}
-          {(folder.type === 'text' || folder.type === 'md' || folder.type === 'pdf' || folder.type === 'doc') && (
+          {(folder.type === 'txt' || folder.type === 'md' || folder.type === 'pdf' || folder.type === 'doc') && (
             <FcFile size={120} />
           )}
           {folder.type === 'folder' && <FcFolder size={120} />}

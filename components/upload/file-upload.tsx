@@ -8,12 +8,14 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import useFilePathStore from '@/store/use-file-path';
+import { addFileAction } from '@/store/use-files';
 export const FileUpload = () => {
-  const { path } = useFilePathStore();
+  const path = useFilePathStore((state) => state.path);
+  const router = useRouter();
   const [files, setFiles] = React.useState<File[]>([]);
   const [isUploading, setIsUploading] = React.useState(false);
   const [progressInfos, setprogressInfos] = React.useState<{ status: string; filename: string }[]>([]);
-
+  const parentId = path[path.length - 1].split('%')[0];
   const onDrop = React.useCallback(
     async (acceptedFiles: File[]) => {
       setIsUploading(true);
@@ -24,7 +26,7 @@ export const FileUpload = () => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('path', '/');
-        formData.append('parentId', path.join('/'));
+        formData.append('parentId', parentId);
         try {
           let response: any = await fetch('/api/folder', {
             method: 'POST',
@@ -33,6 +35,8 @@ export const FileUpload = () => {
           response = await response.json();
           _progressInfos[index].status = 'success';
           toast(response.message);
+          addFileAction(response.data);
+          // router.refresh()
         } catch (error) {
           _progressInfos[index].status = 'error';
         } finally {

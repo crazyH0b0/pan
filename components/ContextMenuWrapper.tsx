@@ -8,39 +8,60 @@ import {
   ContextMenuRadioGroup,
   ContextMenuRadioItem,
   ContextMenuSeparator,
-  ContextMenuShortcut,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { useModalStore } from '@/store/use-modal';
 import { File } from '@prisma/client';
-import { auth, currentUser, useAuth } from '@clerk/nextjs';
 
 import { deleteFile } from '@/actions/deleteFile';
-import axios from 'axios';
+import { toast } from 'sonner';
+import { deleteFileAction } from '@/store/use-files';
+import useFilePathStore from '@/store/use-file-path';
 
 const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; folder: File }) => {
+  const path = useFilePathStore((state) => state.path);
+  const parentId = path[path.length - 1].split('%')[0];
   const { OnOpen } = useModalStore();
-  // const { userId } = auth();
-  // const { userId } = auth();
-  // const { userId } = useAuth();
   const onDelete = async () => {
-    await axios.delete('/api/folder', {
-      params: {
-        fileId: folder.fileId,
-      },
+    const fileToDelete = await deleteFile(folder);
+    if (fileToDelete) {
+      toast('删除成功');
+      deleteFileAction(fileToDelete.fileId);
+      return;
+    }
+    toast('删除失败');
+  };
+  const onRenameFile = async () => {
+    OnOpen('renameModel', {
+      folder,
+      parentId,
     });
+  };
+
+  const onDownload = () => {
+    if (folder.url) {
+      toast('正在准备下载');
+      const link = document.createElement('a');
+      link.href = folder.url; // 设置下载链接地址
+      link.setAttribute('download', ''); // 添加download属性，指示浏览器下载
+      document.body.appendChild(link);
+      link.click(); // 模拟点击链接
+      document.body.removeChild(link); // 点击后移除链接
+    } else {
+      toast('下载链接为空！');
+    }
   };
   return (
     <ContextMenu>
       <ContextMenuTrigger className="w-[120px] ">{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        <ContextMenuItem inset>
+        <ContextMenuItem inset onClick={onDownload}>
           下载
           {/* <ContextMenuShortcut>win[</ContextMenuShortcut> */}
         </ContextMenuItem>
 
         <ContextMenuSeparator />
-        <ContextMenuItem inset>
+        <ContextMenuItem inset onClick={onRenameFile}>
           重命名
           {/* <ContextMenuShortcut>⌘R</ContextMenuShortcut> */}
         </ContextMenuItem>

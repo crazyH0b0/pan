@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import useFilePathStore from '@/store/use-file-path';
 import { createFolder } from '@/app/actions/create-folder';
 import { toast } from 'sonner';
+import {  addFileAction } from '@/store/use-files';
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -24,7 +25,7 @@ const formSchema = z.object({
 });
 
 const CreateFolderModal = () => {
-  const { path } = useFilePathStore();
+  const { path, parentId } = useFilePathStore();
   const { folders } = useFolderStore();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,16 +38,16 @@ const CreateFolderModal = () => {
   React.useEffect(() => {
     inputRef.current?.focus;
   }, []);
-  const { addFolder } = useFolderStore();
   const { isOpen, onClose, type } = useModalStore();
-  const isModalOpen = isOpen && type === 'createFolder';
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {  
+    const pId = path[path.length-1].split("%")[0]    
     try {
-      const folder = await createFolder(values.name, path.join('/'));
+      const folder = await createFolder(values.name, pId);
       form.reset();
       toast('文件夹创建成功');
-      router.refresh();
-      window.location.reload();
+      addFileAction(folder)
+      // router.refresh();
+      // window.location.reload();
       onClose();
     } catch (error) {
       toast('文件夹创建失败');
@@ -58,6 +59,7 @@ const CreateFolderModal = () => {
     form.reset();
     onClose();
   };
+  const isModalOpen = isOpen && type === 'createFolder';
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
@@ -83,7 +85,7 @@ const CreateFolderModal = () => {
               )}
             />
             <div className="w-full flex justify-end ">
-              <Button type="submit">Create</Button>
+              <Button type="submit">创建</Button>
             </div>
           </form>
         </Form>
