@@ -23,9 +23,9 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // 如果用户已登录，并且路径不以 /pan/list 或 /share/ 开头，重定向到 /pan/list
-  if (currentUser && !path.startsWith('/pan/list') && !path.startsWith('/share/')) {
-    return Response.redirect(new URL('/pan/list', request.url));
-  }
+  // if (currentUser && !path.startsWith('/pan/list') && !path.startsWith('/share/')) {
+  //   return Response.redirect(new URL('/pan/list', request.url));
+  // }
 
   // 如果用户未登录，并且路径不是以 /login 开头，重定向到 /login
   if (!currentUser && !path.startsWith('/login')) {

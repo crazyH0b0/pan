@@ -16,40 +16,40 @@ const PanSidebar = () => {
   const pathname = usePathname();
   const routes = [
     {
-      label: '全部',
+      label: '全 部',
       icon: LayoutDashboard,
-      href: '/list',
+      href: '/pan/list',
       color: 'text-sky-500',
     },
 
     {
-      label: '图片',
+      label: '图 片',
       icon: ImageIcon,
       color: 'text-pink-700',
-      href: '/image',
+      href: '/pan/image',
     },
     {
-      label: '视频',
+      label: '视 频',
       icon: VideoIcon,
       color: 'text-orange-700',
-      href: '/video',
+      href: '/pan/video',
     },
     {
-      label: '音乐',
+      label: '音 乐',
       icon: Music,
       color: 'text-emerald-500',
-      href: '/music',
+      href: '/pan/music',
     },
     {
-      label: '代码',
+      label: '代 码',
       icon: Code,
       color: 'text-green-700',
-      href: '/code',
+      href: '/pan/code',
     },
     {
-      label: '设置',
+      label: '设 置',
       icon: Settings,
-      href: '/settings',
+      href: '/pan/settings',
     },
   ];
   return (

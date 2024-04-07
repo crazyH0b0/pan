@@ -9,6 +9,8 @@ import { File } from '@prisma/client';
 import useFilePathStore, { setFilePath } from '@/store/use-file-path';
 import useFilesStore, { setFiles } from '@/store/use-files';
 import { getFiles } from '@/actions/get-files';
+import { FileIcon } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 const DynamicComponentWithNoSSR = dynamic(() => import('./data-table-item'), {
   loading: () => <FolderSkeleton></FolderSkeleton>,
   ssr: false,
@@ -21,6 +23,8 @@ interface DataTableDemoProps {
 }
 
 function DataTableDemo({ panId, slug }: DataTableDemoProps) {
+  let type = usePathname().split('/')[2];
+  // type = type === 'list' ? undefined : type;
   const { selectedFolders, setSelectedFolders, clearSelectedFolders } = useFolderStore();
   const parentId = useFilePathStore((state) => state.parentId);
   setFilePath(slug, parentId);
@@ -40,9 +44,22 @@ function DataTableDemo({ panId, slug }: DataTableDemoProps) {
   }, [slug, parentId]);
   const getAllFiles = async (pandId: string, pId: string) => {
     setFiles([]);
-    const res = await getFiles(pandId, pId);
+    const res = await getFiles(pandId, pId, type);
     setFiles(res);
   };
+  if (fileArr.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-[500px] ">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <FileIcon className="h-12 w-12 text-gray-500 dark:text-gray-400" />
+          <h1 className="font-bold text-3xl">空空如也</h1>
+          <p className="w-full max-w-[500px] text-gray-500 dark:text-gray-400">
+            您可以开始将文件上传到您的账户，以便开始使用
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <div className="flex justify-between items-center ">

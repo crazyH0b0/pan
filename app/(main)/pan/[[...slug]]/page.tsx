@@ -21,16 +21,16 @@ import useFilesStore, { setFiles } from '@/store/use-files';
 const page = async ({ params }: { params: { slug: string[] } }) => {
   const slug = params.slug;
   const cookieStore = cookies();
-  const currentUser = JSON.parse(cookieStore.get('user')?.value!) as User;  
+  const currentUser = JSON.parse(cookieStore.get('user')?.value!) as User;
   let dbUser = null;
-  
+
   dbUser = await prisma.user.findUnique({
     where: {
       id: currentUser.id,
-      username: currentUser.username
+      username: currentUser.username,
     },
   });
-  
+
   if (!currentUser || !dbUser) return redirect('/login');
   const pan = (await prisma.pan.findUnique({
     where: {
@@ -45,7 +45,7 @@ const page = async ({ params }: { params: { slug: string[] } }) => {
   //     parentId: slug.join('/'),
   //   },
   // });
-  
+
   return (
     <ScrollArea className="h-[560px] rounded-md border p-4">
       <DataTableDemo panId={pan.id} slug={slug} />
