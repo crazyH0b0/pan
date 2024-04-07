@@ -2,6 +2,7 @@
 import React from "react";
 import CreateFolderModal from "../modals/create-folder-modal";
 import RenameFileModal from "../modals/rename-file-modal";
+import InviteModal from "../modals/invite-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = React.useState(false);
@@ -13,6 +14,7 @@ const ModalProvider = () => {
     <>
       <CreateFolderModal />
       <RenameFileModal />
+      <InviteModal />
     </>
   );
 };

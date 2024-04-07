@@ -34,7 +34,7 @@ const Login = () => {
       router.push('/list');
       return;
     }
-    toast('登录失败~');
+    toast.error('登录失败~');
   };
   return (
     <Form {...form}>
@@ -62,7 +62,7 @@ const Login = () => {
               <FormItem>
                 <FormLabel>密码</FormLabel>
                 <FormControl>
-                  <Input placeholder="请输入密码" {...field} />
+                  <Input type="password" placeholder="请输入密码" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

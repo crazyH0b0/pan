@@ -34,35 +34,18 @@ model File {
   parentId  String
   type      String
   isDeleted Boolean? @default(false)
+  share     Share?
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
-// model File {
-//   fileId   String @id @default(uuid())
-//   fileName String
-//   url      String
-//   suffix   String
-//   parentId String
 
-//   folderId String
-//   Folder   Folder @relation(fields: [folderId], references: [folderId])
 
-//   isDeleted Boolean @default(false)
-
-//   updatedAt DateTime @updatedAt
-//   createdAt DateTime @default(now())
-// }
-
-// model Folder {
-//   folderId   String   @id @default(uuid())
-//   folderName String
-//   files      File[]
-//   parentId   String
-//   updatedAt  DateTime @updatedAt
-//   createdAt  DateTime @default(now())
-// }
-
-// model UserFiles {
-//   id     String @id @default(uuid())
-//   userId String
-// }
+model Share {
+  shareId   String   @id @default(uuid())
+  fileId    String   @unique
+  file      File     @relation(fields: [fileId], references: [fileId])
+  sharedWith String? // 可以用来存储接收者的信息，如果为空，则表示是公开分享
+  shareLink String   @unique
+  expiry    DateTime?
+  createdAt DateTime @default(now())
+}

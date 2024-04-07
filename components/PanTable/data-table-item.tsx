@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { FcFolder, FcImageFile, FcFile } from 'react-icons/fc';
+import { FcFolder, FcImageFile, FcFile, FcVideoFile } from 'react-icons/fc';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '../ui/checkbox';
 import { useFolderStore } from '@/store/use-folder';
@@ -15,7 +15,7 @@ const DataTableItem = ({ folder }: { folder: File }) => {
   const router = useRouter();
   const { setSelectedFolders, selectedFolders } = useFolderStore();
   const isChecked = selectedFolders?.includes(folder);
-  const path = useFilePathStore(state => state.path)
+  const path = useFilePathStore((state) => state.path);
 
   function onCheckedChange(checked: boolean) {
     const filterSelectedFolders = selectedFolders?.filter((value) => value !== folder);
@@ -25,10 +25,10 @@ const DataTableItem = ({ folder }: { folder: File }) => {
 
   const formattedDate = format(folder.createdAt, 'yyyy-MM-dd HH:mm');
   const handleViewFolder = () => {
-    const newPath = [...path]
-    newPath.push(`${folder.fileId}&${folder.name}`)
-    const newPathArr = newPath.join("/")
-    router.push(newPathArr)
+    const newPath = [...path];
+    newPath.push(`${folder.fileId}&${folder.name}`);
+    const newPathArr = newPath.join('/');
+    router.push(newPathArr);
     // router.push(`/pan/list/${folder.name}`);
   };
   // const [mounted, setMounted] = React.useState(false);
@@ -56,6 +56,7 @@ const DataTableItem = ({ folder }: { folder: File }) => {
           {(folder.type === 'txt' || folder.type === 'md' || folder.type === 'pdf' || folder.type === 'doc') && (
             <FcFile size={120} />
           )}
+          {folder.type === 'mp4' && <FcVideoFile size={120} />}
           {folder.type === 'folder' && <FcFolder size={120} />}
 
           <div className="w-[115px] flex flex-col items-center">

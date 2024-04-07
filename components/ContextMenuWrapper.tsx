@@ -17,12 +17,15 @@ import { deleteFile } from '@/actions/deleteFile';
 import { toast } from 'sonner';
 import { deleteFileAction } from '@/store/use-files';
 import useFilePathStore from '@/store/use-file-path';
+import { genShareCode } from '@/actions/gen-share-code';
 
 const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; folder: File }) => {
   const path = useFilePathStore((state) => state.path);
   const parentId = path[path.length - 1].split('%')[0];
   const { OnOpen } = useModalStore();
   const onDelete = async () => {
+    console.log('删除');
+
     const fileToDelete = await deleteFile(folder);
     if (fileToDelete) {
       toast('删除成功');
@@ -51,6 +54,11 @@ const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; f
       toast('下载链接为空！');
     }
   };
+
+  const onShare = async () => {
+    const code = await genShareCode(folder);
+    OnOpen('inviteModal', { file: folder, code });
+  };
   return (
     <ContextMenu>
       <ContextMenuTrigger className="w-[120px] ">{children}</ContextMenuTrigger>
@@ -65,7 +73,7 @@ const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; f
           重命名
           {/* <ContextMenuShortcut>⌘R</ContextMenuShortcut> */}
         </ContextMenuItem>
-        <ContextMenuCheckboxItem>分享</ContextMenuCheckboxItem>
+        <ContextMenuCheckboxItem onClick={onShare}>分享</ContextMenuCheckboxItem>
         <ContextMenuSeparator />
         <ContextMenuRadioGroup value="pedro">
           <ContextMenuRadioItem value="pedro">详细信息</ContextMenuRadioItem>
