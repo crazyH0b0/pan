@@ -18,14 +18,13 @@ import { toast } from 'sonner';
 import { deleteFileAction } from '@/store/use-files';
 import useFilePathStore from '@/store/use-file-path';
 import { genShareCode } from '@/actions/gen-share-code';
+import { restoreFileAction } from '@/actions/restore-file';
 
 const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; folder: File }) => {
   const path = useFilePathStore((state) => state.path);
   const parentId = path[path.length - 1].split('%')[0];
   const { OnOpen } = useModalStore();
   const onDelete = async () => {
-    console.log('删除');
-
     const fileToDelete = await deleteFile(folder);
     if (fileToDelete) {
       toast('删除成功');
@@ -59,30 +58,47 @@ const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; f
     const code = await genShareCode(folder);
     OnOpen('inviteModal', { file: folder, code });
   };
+  const handleRestore = async () => {
+    try {
+      await restoreFileAction(folder);
+      toast.success('文件恢复成功~');
+    } catch (error) {
+      toast.error('文件恢复失败，请重新试试~');
+    }
+  };
   return (
     <ContextMenu>
       <ContextMenuTrigger className="w-[120px] ">{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        <ContextMenuItem inset onClick={onDownload}>
-          下载
-          {/* <ContextMenuShortcut>win[</ContextMenuShortcut> */}
-        </ContextMenuItem>
-
-        <ContextMenuSeparator />
-        <ContextMenuItem inset onClick={onRenameFile}>
-          重命名
-          {/* <ContextMenuShortcut>⌘R</ContextMenuShortcut> */}
-        </ContextMenuItem>
-        <ContextMenuCheckboxItem onClick={onShare}>分享</ContextMenuCheckboxItem>
-        <ContextMenuSeparator />
-        <ContextMenuRadioGroup value="pedro">
-          <ContextMenuRadioItem value="pedro">详细信息</ContextMenuRadioItem>
-          <ContextMenuRadioItem value="colm">
-            <p className="text-rose-500" onClick={onDelete}>
-              删除
-            </p>
-          </ContextMenuRadioItem>
-        </ContextMenuRadioGroup>
+        {folder.isDeleted ? (
+          <ContextMenuItem className="h-12" onClick={handleRestore}>
+            恢复
+          </ContextMenuItem>
+        ) : (
+          <>
+            {folder.type !== 'folder' && (
+              <ContextMenuItem inset onClick={onDownload}>
+                下载
+              </ContextMenuItem>
+            )}
+            <ContextMenuSeparator />
+            <ContextMenuItem inset onClick={onRenameFile}>
+              重命名
+            </ContextMenuItem>
+            <ContextMenuCheckboxItem onClick={onShare}>分享</ContextMenuCheckboxItem>
+            <ContextMenuSeparator />
+            <ContextMenuRadioGroup value="pedro">
+              <ContextMenuRadioItem value="pedro">详细信息</ContextMenuRadioItem>
+              {folder.type !== 'folder' && (
+                <ContextMenuRadioItem value="colm">
+                  <p className="text-rose-500" onClick={onDelete}>
+                    删除
+                  </p>
+                </ContextMenuRadioItem>
+              )}
+            </ContextMenuRadioGroup>
+          </>
+        )}
       </ContextMenuContent>
     </ContextMenu>
   );

@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from 'lucide-react';
+import { Code, FileText, ImageIcon, LayoutDashboard, Music, Settings, Trash2, VideoIcon } from 'lucide-react';
 import { Montserrat } from 'next/font/google';
 
 import { Button } from './ui/button';
@@ -47,13 +47,25 @@ const PanSidebar = () => {
       href: '/pan/code',
     },
     {
+      label: '文 本',
+      icon: FileText,
+      color: 'text-muted-foreground',
+      href: '/pan/text',
+    },
+    {
+      label: '回 收 站',
+      icon: Trash2,
+      color: 'text-rose-700',
+      href: '/pan/trash',
+    },
+    {
       label: '设 置',
       icon: Settings,
       href: '/pan/settings',
     },
   ];
   return (
-    <div className="flex pb-3 flex-col items-center h-full border-r shadow text-primary w-[300px] py-2  bg-background">
+    <div className="flex pb-3  flex-col items-center h-full border-r shadow text-primary w-[300px] py-2  bg-background">
       <div className="w-full px-3 flex-1">
         <div className=" w-full">
           <div className="space-y-1">

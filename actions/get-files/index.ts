@@ -3,25 +3,22 @@ import prisma from '@/lib/prisma';
 
 const typeMap = {
   list: undefined,
-  image: 'jpg',
-  music: 'mp4',
-  video: 'mp4',
-} as const;
-
-type TypeMap = typeof typeMap;
-type TypeMapKey = keyof TypeMap;
+  image: ['jpg', 'png', 'jpeg'],
+  music: ['mp3'],
+  video: ['mp4', 'vimeo'],
+  text: ['txt', 'pdf', 'docx', 'doc'],
+};
 
 export const getFiles = async (panId: string, parentId: string, type: string) => {
-  const fileType = type as TypeMapKey;
-  if (!typeMap.hasOwnProperty(fileType)) {
-    throw new Error('Invalid type specified');
-  }
+  // const types = Object.keys(typeMap);
+  let filteredParentId = type !== 'list' ? undefined : parentId;
+  let isDeleted = type === 'trash' ? true : false;
   const files = await prisma.file.findMany({
     where: {
       panId: panId,
-      isDeleted: false,
-      parentId: parentId,
-      type: typeMap[fileType],
+      isDeleted: isDeleted,
+      parentId: filteredParentId,
+      type: { in: typeMap[type] },
     },
   });
 
