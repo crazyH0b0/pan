@@ -36,6 +36,7 @@ export async function POST(req: Request) {
             type,
             parentId: parentId,
             url,
+            size: file.size,
           },
         });
         return NextResponse.json({ status: code, message: '上传成功', data: fileToCreate });

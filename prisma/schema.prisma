@@ -37,6 +37,8 @@ model File {
   share     Share?
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+  size Int // 文件大小以字节为单位
+ 
 }
 
 
@@ -44,7 +46,7 @@ model Share {
   shareId   String   @id @default(uuid())
   fileId    String   @unique
   file      File     @relation(fields: [fileId], references: [fileId])
-  sharedWith String? // 可以用来存储接收者的信息，如果为空，则表示是公开分享
+  sharedWith String? 
   shareLink String   @unique
   expiry    DateTime?
   createdAt DateTime @default(now())
