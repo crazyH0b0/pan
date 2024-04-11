@@ -2,9 +2,7 @@
 import React from 'react';
 import { BarChart } from '@tremor/react';
 
-const dataFormatter = (number: number) => {
-  return Intl.NumberFormat('us').format(number).toString();
-};
+const dataFormatter = (number: number) => Intl.NumberFormat('us').format(number).toString();
 const Bar = ({ chartData }: { chartData: any }) => {
   return (
     <div className="w-full ">
@@ -16,6 +14,9 @@ const Bar = ({ chartData }: { chartData: any }) => {
         colors={['blue']}
         valueFormatter={dataFormatter}
         yAxisWidth={48}
+        autoMinValue={false}
+        minValue={0}
+        allowDecimals={false}
       />
     </div>
   );
