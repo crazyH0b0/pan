@@ -6,14 +6,21 @@ import { Code, FileText, ImageIcon, LayoutDashboard, Music, Settings, Trash2, Vi
 import { Montserrat } from 'next/font/google';
 
 import { Button } from './ui/button';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { FreeCounter } from './free-counter';
+import { getCookieCredential } from '@/utils/getCookieCredential ';
+import { User } from '@prisma/client';
 
 const poppins = Montserrat({ weight: '600', subsets: ['latin'] });
 
 const PanSidebar = () => {
   const pathname = usePathname();
+  const [user, setUser] = React.useState<User>();
+  React.useEffect(() => {
+    getCookieCredential().then((res) => {
+      setUser(res);
+    });
+  }, []);
   const routes = [
     {
       label: '全 部',
@@ -69,22 +76,25 @@ const PanSidebar = () => {
       <div className="w-full px-3 flex-1">
         <div className=" w-full">
           <div className="space-y-1">
-            {routes.map((route) => (
-              <Button key={route.href} asChild variant={'ghost'}>
-                <Link
-                  href={route.href}
-                  className={cn(
-                    'text-sm group flex p-3 w-full justify-start font-medium cursor-pointer  rounded-lg transition',
-                    pathname === route.href ? 'underline ' : 'text-zinc-400'
-                  )}
-                >
-                  <div className="flex items-center flex-1">
-                    <route.icon className={cn('h-5 w-5 mr-3', route.color)} />
-                    {route.label}
-                  </div>
-                </Link>
-              </Button>
-            ))}
+            {routes.map((route) => {
+              const disabled = route.label === '设 置' && user?.username !== 'admin';
+              return (
+                <Button className="w-full" key={route.href} variant={'ghost'} disabled={disabled}>
+                  <Link
+                    href={route.href}
+                    className={cn(
+                      'text-sm group flex p-3 w-full justify-start font-medium cursor-pointer  rounded-lg transition',
+                      pathname === route.href ? 'underline ' : 'text-zinc-400'
+                    )}
+                  >
+                    <div className="flex items-center flex-1">
+                      <route.icon className={cn('h-5 w-5 mr-3', route.color)} />
+                      {route.label}
+                    </div>
+                  </Link>
+                </Button>
+              );
+            })}
           </div>
         </div>
       </div>

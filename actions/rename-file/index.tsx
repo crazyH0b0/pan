@@ -18,6 +18,14 @@ export const renameFileAction = async (file: File, newName: string) => {
   });
 
   if (!dbFile) throw new Error('文件或文件夹不存在');
+  const formData = new FormData();
+  formData.append('userId', user.id);
+  formData.append('oldFileName', file.name);
+  formData.append('newFileName', newName);
+  let response = await fetch('http://localhost:8090/hdfs/rename', {
+    method: 'POST',
+    body: formData,
+  });
   const fileToUpdate = await prisma.file.update({
     where: {
       fileId: file.fileId,

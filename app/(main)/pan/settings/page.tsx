@@ -1,15 +1,16 @@
 import React from 'react';
-import UserTable, { UserTableProps } from './user-table';
+import UserTable from './user-table';
 import { getAllFiles } from '@/actions/get-all-files';
+import { getUsers } from '@/actions/manage-file';
 
-const SettingsPage = async () => {
-  const userData = (await getAllFiles()) as any;
-  if (userData.length === 0) {
-    return <div>暂无数据</div>;
-  }
+const SettingsPage = async ({ searchParams }: { searchParams?: { type: string; keyword: string } }) => {
+  const { type, keyword } = searchParams || { type: '', keyword: '' };
+  const userData = (await getAllFiles(keyword)) as any;
+  const users = (await getUsers(keyword)) as any;
+
   return (
     <div className=" mx-auto w-full">
-      <UserTable data={userData} />
+      <UserTable data={userData} users={users} />
     </div>
   );
 };

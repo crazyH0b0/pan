@@ -11,6 +11,8 @@ import useFilesStore, { setFiles } from '@/store/use-files';
 import { getFiles } from '@/actions/get-files';
 import { FileIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { Button } from '../ui/button';
+import DeleteBtn from './delete-btn';
 const DynamicComponentWithNoSSR = dynamic(() => import('./data-table-item'), {
   loading: () => <FolderSkeleton></FolderSkeleton>,
   ssr: false,
@@ -22,6 +24,7 @@ interface DataTableDemoProps {
   panId: string;
 }
 
+// TODO: 改为服务端组件获取数据
 function DataTableDemo({ panId, slug }: DataTableDemoProps) {
   let type = usePathname().split('/')[2];
   // type = type === 'list' ? undefined : type;
@@ -62,7 +65,7 @@ function DataTableDemo({ panId, slug }: DataTableDemoProps) {
   }
   return (
     <div>
-      <div className="flex justify-between items-center ">
+      <div className="flex justify-between items-center h-12 ">
         <div className="space-x-2 flex items-center">
           <Checkbox
             className="border-2"
@@ -84,6 +87,7 @@ function DataTableDemo({ panId, slug }: DataTableDemoProps) {
           <span className="ml-2">
             {selectedFolders.length > 0 ? `已选中 ${selectedFolders.length} 项` : `${fileArr.length} 项`}
           </span>
+          {selectedFolders.length > 0 && <DeleteBtn />}
         </div>
       </div>
       <div className="grid md:grid-cols-4 lg:grid-cols-7 gap-3 mt-3 w-full">

@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { Button } from './ui/button';
-import Dropzone, { useDropzone } from 'react-dropzone';
 import {
   Dialog,
   DialogContent,

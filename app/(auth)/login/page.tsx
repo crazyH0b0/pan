@@ -1,12 +1,10 @@
 import React from 'react';
-import { z } from "zod"
+import { z } from 'zod';
 import Login from './_component/login/login';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Register from './_component/register/register';
 
- 
-
-const page =async () => {
+const page = async () => {
   return (
     <div>
       <div className="w-full min-h-screen flex items-center justify-center px-4">
@@ -18,18 +16,18 @@ const page =async () => {
             </div>
           </div>
           <Tabs defaultValue="login" className="w-[400px]">
-  <TabsList>
-    <TabsTrigger value="login">登录</TabsTrigger>
-    <TabsTrigger value="register">注册</TabsTrigger>
-  </TabsList>
-  <TabsContent value="login">          <Login  />
-</TabsContent>
-  <TabsContent value="register">
-<Register />
-
-  </TabsContent>
-</Tabs>
-
+            <TabsList>
+              <TabsTrigger value="login">登录</TabsTrigger>
+              <TabsTrigger value="register">注册</TabsTrigger>
+            </TabsList>
+            <TabsContent value="login">
+              {' '}
+              <Login />
+            </TabsContent>
+            <TabsContent value="register">
+              <Register />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

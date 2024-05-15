@@ -27,14 +27,14 @@ const Login = () => {
   const { isSubmitting } = form.formState;
   const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
     // onSubmit(data) // 在客户端上调用 onSubmit 函数
-    const res = await login(data.username);
-    if (res.success) {
+    const res = await login(data.username, data.password);
+    if (res?.success) {
       updateUser(res.user!);
       toast('登录成功~');
-      router.push('/list');
+      router.push('/pan/list');
       return;
     }
-    toast.error('登录失败~');
+    toast.error(res?.message);
   };
   return (
     <Form {...form}>

@@ -25,10 +25,11 @@ const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; f
   const parentId = path[path.length - 1].split('%')[0];
   const { OnOpen } = useModalStore();
   const onDelete = async () => {
-    const fileToDelete = await deleteFile(folder);
+    const fileToDelete = await deleteFile([folder]);
     if (fileToDelete) {
       toast('删除成功');
-      deleteFileAction(fileToDelete.fileId);
+      // TODO: 验证是否需要触发 store 的重新渲染
+      // deleteFileAction(fileToDelete.fileId);
       return;
     }
     toast('删除失败');
@@ -77,25 +78,26 @@ const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; f
         ) : (
           <>
             {folder.type !== 'folder' && (
-              <ContextMenuItem inset onClick={onDownload}>
-                下载
-              </ContextMenuItem>
+              <>
+                <ContextMenuItem inset onClick={onDownload}>
+                  下载
+                </ContextMenuItem>
+                <ContextMenuCheckboxItem onClick={onShare}>分享</ContextMenuCheckboxItem>
+              </>
             )}
             <ContextMenuSeparator />
             <ContextMenuItem inset onClick={onRenameFile}>
               重命名
             </ContextMenuItem>
-            <ContextMenuCheckboxItem onClick={onShare}>分享</ContextMenuCheckboxItem>
             <ContextMenuSeparator />
             <ContextMenuRadioGroup value="pedro">
               <ContextMenuRadioItem value="pedro">详细信息</ContextMenuRadioItem>
-              {folder.type !== 'folder' && (
-                <ContextMenuRadioItem value="colm">
-                  <p className="text-rose-500" onClick={onDelete}>
-                    删除
-                  </p>
-                </ContextMenuRadioItem>
-              )}
+
+              <ContextMenuRadioItem value="colm">
+                <p className="text-rose-500" onClick={onDelete}>
+                  删除
+                </p>
+              </ContextMenuRadioItem>
             </ContextMenuRadioGroup>
           </>
         )}

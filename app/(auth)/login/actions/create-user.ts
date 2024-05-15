@@ -4,12 +4,13 @@ import { formSchema } from '../_component/login/schema';
 import prisma from '@/lib/prisma';
 
 export async function create(data: z.infer<typeof formSchema>) {
-  const { username } = data;
+  const { username, password } = data;
 
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
         username,
+        password,
       },
     });
 
@@ -19,6 +20,7 @@ export async function create(data: z.infer<typeof formSchema>) {
       const newUser = await prisma.user.create({
         data: {
           username,
+          password,
         },
       });
       await prisma.pan.create({

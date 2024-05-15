@@ -14,12 +14,14 @@ generator client {
 model User {
   id       String @id @default(uuid())
   username String @unique
+  password String @unique
+  isDisabled Boolean @default(false)
   pan Pan?
 }
 
 model Pan {
   id       String @id @default(uuid())
-  user     User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String @unique
   files    File[]
 }
@@ -28,7 +30,7 @@ model File {
   fileId    String   @id @default(uuid())
   name      String
   panId     String
-  pan       Pan      @relation(fields: [panId], references: [id])
+  pan       Pan      @relation(fields: [panId], references: [id], onDelete: Cascade)
   url       String?
   suffix    String?
   parentId  String
@@ -45,7 +47,7 @@ model File {
 model Share {
   shareId   String   @id @default(uuid())
   fileId    String   @unique
-  file      File     @relation(fields: [fileId], references: [fileId])
+  file      File     @relation(fields: [fileId], references: [fileId],onDelete: Cascade)
   sharedWith String? 
   shareLink String   @unique
   expiry    DateTime?

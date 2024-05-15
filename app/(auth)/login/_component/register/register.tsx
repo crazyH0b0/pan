@@ -19,6 +19,7 @@ const Register = () => {
     defaultValues: {
       username: '',
       password: '',
+      confirm: '',
     },
   });
   const { isSubmitting } = form.formState;
@@ -26,6 +27,7 @@ const Register = () => {
     const res = await create(data);
     if (res !== null) {
       toast('用户创建成功~');
+      form.reset();
       return;
     }
     toast.error('用户创建失败~');

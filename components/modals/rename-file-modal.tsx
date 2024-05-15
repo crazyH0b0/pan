@@ -62,9 +62,10 @@ const RenameFileModal = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">
+            {/* TODO: 修改 loader 大小 */}
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader className="animate-spin" />}
-              确认
+              修改
             </Button>
           </form>
         </Form>

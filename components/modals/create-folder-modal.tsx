@@ -16,7 +16,8 @@ import { useRouter } from 'next/navigation';
 import useFilePathStore from '@/store/use-file-path';
 import { createFolder } from '@/app/actions/create-folder';
 import { toast } from 'sonner';
-import {  addFileAction } from '@/store/use-files';
+import { addFileAction } from '@/store/use-files';
+import { format } from 'date-fns';
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -31,7 +32,7 @@ const CreateFolderModal = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: 'folder',
+      name: '新建文件夹-' + crypto.randomUUID(),
     },
   });
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -39,24 +40,27 @@ const CreateFolderModal = () => {
     inputRef.current?.focus;
   }, []);
   const { isOpen, onClose, type } = useModalStore();
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {  
-    const pId = path[path.length-1].split("%")[0]    
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const pId = path[path.length - 1].split('%')[0];
     try {
       const folder = await createFolder(values.name, pId);
       form.reset();
       toast('文件夹创建成功');
-      addFileAction(folder)
-      // router.refresh();
-      // window.location.reload();
-      onClose();
+      addFileAction(folder);
     } catch (error) {
       toast('文件夹创建失败');
     }
-    form.reset();
+    // 更新表单的默认值
+    form.reset({
+      name: '新建文件夹-' + crypto.randomUUID(),
+    });
     onClose();
   };
   const handleModalClose = () => {
-    form.reset();
+    // 更新表单的默认值
+    form.reset({
+      name: '新建文件夹-' + crypto.randomUUID(),
+    });
     onClose();
   };
   const isModalOpen = isOpen && type === 'createFolder';
@@ -85,7 +89,9 @@ const CreateFolderModal = () => {
               )}
             />
             <div className="w-full flex justify-end ">
-              <Button type="submit">创建</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                创建
+              </Button>
             </div>
           </form>
         </Form>
