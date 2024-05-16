@@ -49,7 +49,7 @@ model Share {
   fileId    String   @unique
   file      File     @relation(fields: [fileId], references: [fileId],onDelete: Cascade)
   sharedWith String? 
-  shareLink String   @unique
+  shareLink String?   @unique
   expiry    DateTime?
   createdAt DateTime @default(now())
 }

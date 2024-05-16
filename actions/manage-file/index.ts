@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { Share } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
@@ -45,4 +46,16 @@ export async function getUsers(keyword: string) {
     },
   });
   return users;
+}
+
+export async function CancelFileShare(share: Share) {
+  await prisma.share.update({
+    where: {
+      shareId: share.shareId,
+    },
+    data: {
+      shareLink: null,
+    },
+  });
+  revalidatePath('/pan/share');
 }
