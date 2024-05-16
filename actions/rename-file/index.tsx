@@ -2,6 +2,7 @@
 import prisma from '@/lib/prisma';
 import { getCookieCredential } from '@/utils/getCookieCredential ';
 import { File } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 export const renameFileAction = async (file: File, newName: string) => {
   const user = await getCookieCredential();
@@ -18,14 +19,16 @@ export const renameFileAction = async (file: File, newName: string) => {
   });
 
   if (!dbFile) throw new Error('文件或文件夹不存在');
-  const formData = new FormData();
-  formData.append('userId', user.id);
-  formData.append('oldFileName', file.name);
-  formData.append('newFileName', newName);
-  let response = await fetch('http://localhost:8090/hdfs/rename', {
-    method: 'POST',
-    body: formData,
-  });
+  if (file.type !== 'folder') {
+    const formData = new FormData();
+    formData.append('userId', user.id);
+    formData.append('oldFileName', file.name);
+    formData.append('newFileName', newName);
+    await fetch('http://localhost:8090/hdfs/rename', {
+      method: 'POST',
+      body: formData,
+    });
+  }
   const fileToUpdate = await prisma.file.update({
     where: {
       fileId: file.fileId,
@@ -35,6 +38,12 @@ export const renameFileAction = async (file: File, newName: string) => {
       name: newName,
     },
   });
-
+  revalidatePath('/pan/settings');
+  revalidatePath('/pan/list');
+  revalidatePath('/pan/image');
+  revalidatePath('/pan/video');
+  revalidatePath('/pan/music');
+  revalidatePath('/pan/code');
+  revalidatePath('/pan/trash');
   return fileToUpdate;
 };

@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 export async function createFolder(folderName: string, parentId: string) {
@@ -28,5 +29,6 @@ export async function createFolder(folderName: string, parentId: string) {
       size: 22,
     },
   });
+  revalidatePath('/pan/list');
   return folder;
 }

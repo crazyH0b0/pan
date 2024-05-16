@@ -34,7 +34,7 @@ const RenameFileModal = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const res = await renameFileAction(data.folder as File, values.filename);
-      await updateFileAction(res);
+      // await updateFileAction(res);
       onClose();
       toast('重命名成功');
     } catch (error) {

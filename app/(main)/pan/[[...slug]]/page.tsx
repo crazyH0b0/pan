@@ -11,7 +11,8 @@ import DataTableDemo from '@/components/PanTable/data-table';
 import { Prisma, User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import useFilesStore, { setFiles } from '@/store/use-files';
+import { getAllFiles } from '@/actions/get-all-files';
+import { getFiles } from '@/actions/get-files';
 // const AsyncDataTable = React.lazy(() => import('@/components/PanTable/data-table'));
 // const Dashboard = dynamic(() => import('@/components/PanTable/data-table'), {
 //   suspense: true,
@@ -42,13 +43,27 @@ const page = async ({ params }: { params: { slug: string[] } }) => {
   //   where: {
   //     panId: pan.id,
   //     isDeleted: false,
-  //     parentId: slug.join('/'),
+  //     parentId: slug[slug.length - 1],
   //   },
   // });
 
+  // 获取文件
+  let pId = '';
+
+  const parentId = slug[slug.length - 1];
+  const type = slug[0];
+
+  if (parentId === 'list') {
+    pId = parentId;
+  } else {
+    const splitId = parentId.split('%')[0];
+    pId = splitId;
+  }
+  const files = await getFiles(pan.id, pId, type);
+
   return (
     <ScrollArea className="h-[560px] rounded-md border p-4">
-      <DataTableDemo panId={pan.id} slug={slug} />
+      <DataTableDemo panId={pan.id} slug={slug} files={files} />
     </ScrollArea>
   );
 };
