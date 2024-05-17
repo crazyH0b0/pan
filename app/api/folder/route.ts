@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     let response: any = await fetch(`http://localhost:8090/hdfs/upload?userId=${currentUser.id}`, {
       method: 'POST',
       body: formData,
-      signal: controller.signal,
+      // signal: controller.signal,
     });
 
     if (response.ok) {
