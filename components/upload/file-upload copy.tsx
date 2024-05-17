@@ -35,8 +35,8 @@ export const FileUpload = () => {
           response = await response.json();
           _progressInfos[index].status = 'success';
           toast(response.message);
-          // addFileAction(response.data);
-          router.refresh();
+          addFileAction(response.data);
+          // router.refresh()
         } catch (error) {
           _progressInfos[index].status = 'error';
         } finally {

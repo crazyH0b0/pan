@@ -37,7 +37,7 @@ const Line = ({ chartData }: { chartData: any }) => {
     <>
       <LineChart
         className="mt-4 h-72"
-        data={mockData}
+        data={chartData}
         index="date"
         categories={['次数']}
         colors={['rose']}

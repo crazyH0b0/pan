@@ -6,8 +6,10 @@ import { subDays, startOfDay, endOfDay, addDays, format } from 'date-fns';
 
 import Line from './line';
 import Example from './progress';
+import { getCookieCredential } from '@/utils/getCookieCredential ';
 
 const ChartsPage = async () => {
+  const user = await getCookieCredential();
   // 条形图
   const fileTypeCounts = await prisma.file.groupBy({
     by: ['type'],
@@ -17,6 +19,9 @@ const ChartsPage = async () => {
     where: {
       type: {
         not: 'folder',
+      },
+      pan: {
+        userId: user.id,
       },
     },
     orderBy: {
@@ -53,6 +58,9 @@ const ChartsPage = async () => {
         type: {
           not: 'folder', // 假设我们不计算 'folder' 类型的文件
         },
+        pan: {
+          userId: user.id,
+        },
       },
     });
 
@@ -70,9 +78,9 @@ const ChartsPage = async () => {
       size: true,
     },
     where: {
-      // pan: {
-      //   userId: userId,
-      // },
+      pan: {
+        userId: user.id,
+      },
       type: {
         not: 'folder',
       },

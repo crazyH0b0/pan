@@ -1,9 +1,12 @@
 import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
   const cookieStore = cookies();
   const currentUser = JSON.parse(cookieStore.get('user')?.value!) as User;
   const pan = await prisma.pan.findUnique({
@@ -21,6 +24,7 @@ export async function POST(req: Request) {
     let response: any = await fetch(`http://localhost:8090/hdfs/upload?userId=${currentUser.id}`, {
       method: 'POST',
       body: formData,
+      signal: controller.signal,
     });
 
     if (response.ok) {
@@ -39,6 +43,7 @@ export async function POST(req: Request) {
             size: file.size,
           },
         });
+
         return NextResponse.json({ status: code, message: '上传成功', data: fileToCreate });
         // return NextResponse.json({ status: code, message });
       } else {

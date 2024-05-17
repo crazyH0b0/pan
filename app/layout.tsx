@@ -5,6 +5,7 @@ import { Inter as FontSans } from 'next/font/google';
 // import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/sonner';
 import 'react-circular-progressbar/dist/styles.css';
+import 'react-dropzone-uploader/dist/styles.css';
 
 import './globals.css';
 import { cn } from '@/lib/utils';

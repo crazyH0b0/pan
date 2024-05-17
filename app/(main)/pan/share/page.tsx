@@ -3,6 +3,7 @@ import ShareTable from './share-table';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { User } from '@prisma/client';
+import FileUpload from '@/components/upload/FileUpload';
 
 const SharePage = async () => {
   const cookieStore = cookies();
@@ -22,7 +23,12 @@ const SharePage = async () => {
       file: true,
     },
   });
-  return <ShareTable files={sharedFiles} />;
+  return (
+    <>
+      <FileUpload></FileUpload>
+      <ShareTable files={sharedFiles} />;
+    </>
+  );
 };
 
 export default SharePage;
