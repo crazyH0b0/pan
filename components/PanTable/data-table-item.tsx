@@ -7,14 +7,18 @@ import { useFolderStore } from '@/store/use-folder';
 import ContextMenuWrapper from '../ContextMenuWrapper';
 import TooltipWrapper from '../TooltipWrapper';
 import { File } from '@prisma/client';
-import { parse, format } from 'date-fns';
+import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import useFilePathStore from '@/store/use-file-path';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import Image from 'next/image';
+import ReactPlayer from 'react-player/youtube';
+import ModalVideo from 'react-modal-video';
+import VideoModal from 'rc-video-modal';
 
 const DataTableItem = ({ folder }: { folder: File }) => {
   const router = useRouter();
+  const [isOpen, setOpen] = React.useState(false);
   const { setSelectedFolders, selectedFolders } = useFolderStore();
   const isChecked = selectedFolders?.includes(folder);
   const path = useFilePathStore((state) => state.path);
@@ -71,7 +75,39 @@ const DataTableItem = ({ folder }: { folder: File }) => {
             {(folder.type === 'txt' || folder.type === 'md' || folder.type === 'pdf' || folder.type === 'doc') && (
               <FcFile size={120} />
             )}
-            {folder.type === 'mp4' && <FcVideoFile size={120} />}
+            {folder.type === 'mp4' ||
+              (folder.type === 'VINEnc' && (
+                <>
+                  {/* <button className="btn-primary" onClick={() => setOpen(true)}>
+        VIEW DEMO
+      </button> */}
+                  <div>
+                    <VideoModal autoPlay={false} controls loop={false} muted width={'50%'} src={folder.url!}>
+                      <FcVideoFile size={120} />
+                      {/* <button
+                        style={{
+                          background: 'blue',
+                          color: '#fff',
+                          height: 40,
+                          border: 'none',
+                          borderRadius: '5px',
+                          padding: '0 12px',
+                        }}
+                      >
+                        播放视频
+                      </button> */}
+                    </VideoModal>
+                  </div>
+                  {/* <FcVideoFile onClick={() => setOpen(true)} size={120} /> */}
+                  {/* <video width="600" controls autoPlay>
+                    <source
+                      src="http://192.168.111.191:50075/webhdfs/v1/userFiles/d2a3ce72-8e21-408c-97d8-14f06b4b79b4/01.如何打造抖音账号.mp4?op=OPEN&namenoderpcaddress=master:9000&offset=0"
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video> */}
+                </>
+              ))}
             {folder.type === 'folder' && <FcFolder size={120} />}
 
             <div className="w-[115px] flex flex-col items-center">
