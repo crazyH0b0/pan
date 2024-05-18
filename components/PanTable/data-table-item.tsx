@@ -11,6 +11,7 @@ import { parse, format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import useFilePathStore from '@/store/use-file-path';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
+import Image from 'next/image';
 
 const DataTableItem = ({ folder }: { folder: File }) => {
   const router = useRouter();
@@ -61,7 +62,7 @@ const DataTableItem = ({ folder }: { folder: File }) => {
                 <>
                   {/* <span>{folder.url}</span> */}
                   <PhotoView src={folder.url!}>
-                    <img src={folder.url!} alt="" />
+                    <Image width={120} height={120} src={folder.url!} alt="Image" />
                   </PhotoView>
                 </>
               )
