@@ -9,6 +9,11 @@ const nextConfig = {
         port: '',
         pathname: '/8.x/notionists/**',
       },
+      {
+        protocol: 'http',
+        hostname: '192.168.111.191',
+        port: '50075',
+      },
     ],
   },
 };
