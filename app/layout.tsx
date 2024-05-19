@@ -7,7 +7,6 @@ import { Toaster } from '@/components/ui/sonner';
 import 'react-circular-progressbar/dist/styles.css';
 import 'react-dropzone-uploader/dist/styles.css';
 import 'react-photo-view/dist/react-photo-view.css';
-import 'node_modules/react-modal-video/scss/modal-video.scss';
 
 import './globals.css';
 import { cn } from '@/lib/utils';

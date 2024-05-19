@@ -1,8 +1,8 @@
-import MyUploader from '@/components/upload/uploader';
 import React from 'react';
+import TestPdf from './TestPdf';
 
 const TestPage = () => {
-  return <MyUploader />;
+  return <div />;
 };
 
 export default TestPage;

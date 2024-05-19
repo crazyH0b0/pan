@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
-export type ModalType = 'createFolder' | 'renameModel' | 'inviteModal';
+export type ModalType = 'createFolder' | 'renameModel' | 'inviteModal' | 'fileDetailModal';
 
 export interface ModalProps {
   type: ModalType | null;

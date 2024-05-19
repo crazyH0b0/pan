@@ -91,7 +91,11 @@ const ContextMenuWrapper = ({ children, folder }: { children: React.ReactNode; f
             </ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuRadioGroup value="pedro">
-              <ContextMenuRadioItem value="pedro">详细信息</ContextMenuRadioItem>
+              {folder.type !== 'folder' && (
+                <ContextMenuRadioItem value="pedro" onClick={() => OnOpen('fileDetailModal', { file: folder })}>
+                  详细信息
+                </ContextMenuRadioItem>
+              )}
 
               <ContextMenuRadioItem value="colm">
                 <p className="text-rose-500" onClick={onDelete}>

@@ -11,10 +11,9 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import useFilePathStore from '@/store/use-file-path';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
-import Image from 'next/image';
-import ReactPlayer from 'react-player/youtube';
-import ModalVideo from 'react-modal-video';
 import VideoModal from 'rc-video-modal';
+import PdfViewer from './PdfViewer';
+import Image from 'next/image';
 
 const DataTableItem = ({ folder }: { folder: File }) => {
   const router = useRouter();
@@ -61,19 +60,19 @@ const DataTableItem = ({ folder }: { folder: File }) => {
               checked={isChecked}
               onCheckedChange={(checked: boolean) => onCheckedChange(checked)}
             />
-            {
-              (folder.type === 'jpg' || folder.type === 'png') && (
-                <>
-                  {/* <span>{folder.url}</span> */}
-                  <PhotoView src={folder.url!}>
-                    <Image width={120} height={120} src={folder.url!} alt="Image" />
-                  </PhotoView>
-                </>
-              )
-              // <FcImageFile size={120} />
-            }
+            {(folder.type === 'jpg' || folder.type === 'png') && (
+              <>
+                <PhotoView src={folder.url!}>
+                  <Image width={120} height={120} src={folder.url!} alt="Image" />
+                </PhotoView>
+              </>
+            )}
             {(folder.type === 'txt' || folder.type === 'md' || folder.type === 'pdf' || folder.type === 'doc') && (
-              <FcFile size={120} />
+              <>
+                {/* <button onClick={() => setOpen(true)}>View PDF</button> */}
+                {/* {isOpen && <PdfViewer url={folder.url!} />} */}
+                <FcFile size={120} />
+              </>
             )}
             {folder.type === 'mp4' ||
               (folder.type === 'VINEnc' && (
