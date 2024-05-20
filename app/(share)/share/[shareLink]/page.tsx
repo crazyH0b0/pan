@@ -1,12 +1,13 @@
 import React from 'react';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { FileMinus } from 'lucide-react';
-import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import ShareFileDeleted from './_components/share-file-deleted';
 import { formatCreatedAt } from '@/utils/genDate';
 import { toast } from 'sonner';
 import DownloadLink from './_components/download-link';
+import bytes from 'bytes';
+
 const sharePage = async ({ params }: { params: { shareLink: string } }) => {
   const shareWithInfo = await prisma.share.findUnique({
     where: {
@@ -47,11 +48,11 @@ const sharePage = async ({ params }: { params: { shareLink: string } }) => {
           <FileMinus size={50} />
           <div className="text-center space-y-1">
             <h3 className="text-sm font-medium leading-none">{file?.name}</h3>
-            <p className="text-xs font-medium leading-none text-gray-500">未知大小</p>
+            <p className="text-xs font-medium leading-none text-gray-500">{bytes(file?.size)} </p>
           </div>
           <div className="text-center space-y-2">
             <p className="text-xs font-medium leading-none text-gray-500">
-              上传于 {formatCreatedAt(shareWithInfo?.createdAt.toISOString() ?? '')}
+              分享于 {formatCreatedAt(shareWithInfo?.createdAt.toISOString() ?? '')}
             </p>
             <DownloadLink file={file} />
           </div>

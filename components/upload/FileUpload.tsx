@@ -1,7 +1,6 @@
 'use client';
 import React, { useRef, useState } from 'react';
 import './FileUpload.css';
-import Upload from 'rc-upload';
 const FileUpload = () => {
   const inputRef = useRef();
 
@@ -60,11 +59,7 @@ const FileUpload = () => {
     }
   };
 
-  return (
-    <div>
-      <Upload></Upload>
-    </div>
-  );
+  return <div>{/* <Upload></Upload> */}</div>;
 };
 
 export default FileUpload;

@@ -52,7 +52,7 @@ export interface UserTableProps {
   })[];
   users: User[];
 }
-// TODO: Table 搜索加上 loading
+// TODO: Table 搜索加上 loading & 禁用状态 bug
 const UserTable = ({ data, users }: UserTableProps) => {
   const [currentTab, setCurrentTab] = React.useState('user');
   const status = useFormStatus();
@@ -214,7 +214,7 @@ const UserTable = ({ data, users }: UserTableProps) => {
                       <TableRow>
                         <TableHead></TableHead>
                         <TableHead>用户名</TableHead>
-                        <TableHead>启用</TableHead>
+                        <TableHead>禁用</TableHead>
                         {/* <TableHead className="hidden md:table-cell">大小</TableHead> */}
                         <TableHead className="hidden md:table-cell">操作</TableHead>
                         <TableHead>

@@ -2,6 +2,7 @@ import React from 'react';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { FileMinus } from 'lucide-react';
 import Link from 'next/link';
+
 const sharePage = () => {
   return (
     <div className="flex items-center justify-center h-screen">

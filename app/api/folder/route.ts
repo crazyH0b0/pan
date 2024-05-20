@@ -20,7 +20,8 @@ export async function POST(req: Request) {
     const file = formData.get('file') as File;
     const parentId = formData.get('parentId') as string;
     if (!file) return new NextResponse('Internal Error', { status: 500 });
-    const type = file.name.split('.')[1];
+    const typeArr = file.name.split('.');
+    const type = typeArr[typeArr.length - 1];
     let response: any = await fetch(`http://localhost:8090/hdfs/upload?userId=${currentUser.id}`, {
       method: 'POST',
       body: formData,

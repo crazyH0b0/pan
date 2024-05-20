@@ -74,16 +74,15 @@ const DataTableItem = ({ folder }: { folder: File }) => {
                 <FcFile size={120} />
               </>
             )}
-            {folder.type === 'mp4' ||
-              (folder.type === 'VINEnc' && (
-                <>
-                  {/* <button className="btn-primary" onClick={() => setOpen(true)}>
+            {(folder.type === 'mp4' || folder.type === 'VINEnc') && (
+              <>
+                {/* <button className="btn-primary" onClick={() => setOpen(true)}>
         VIEW DEMO
       </button> */}
-                  <div>
-                    <VideoModal autoPlay={false} controls loop={false} muted width={'50%'} src={folder.url!}>
-                      <FcVideoFile size={120} />
-                      {/* <button
+                <div>
+                  <VideoModal autoPlay={false} controls loop={false} muted width={'50%'} src={folder.url!}>
+                    <FcVideoFile size={120} />
+                    {/* <button
                         style={{
                           background: 'blue',
                           color: '#fff',
@@ -95,18 +94,18 @@ const DataTableItem = ({ folder }: { folder: File }) => {
                       >
                         播放视频
                       </button> */}
-                    </VideoModal>
-                  </div>
-                  {/* <FcVideoFile onClick={() => setOpen(true)} size={120} /> */}
-                  {/* <video width="600" controls autoPlay>
+                  </VideoModal>
+                </div>
+                {/* <FcVideoFile onClick={() => setOpen(true)} size={120} /> */}
+                {/* <video width="600" controls autoPlay>
                     <source
                       src="http://192.168.111.191:50075/webhdfs/v1/userFiles/d2a3ce72-8e21-408c-97d8-14f06b4b79b4/01.如何打造抖音账号.mp4?op=OPEN&namenoderpcaddress=master:9000&offset=0"
                       type="video/mp4"
                     />
                     Your browser does not support the video tag.
                   </video> */}
-                </>
-              ))}
+              </>
+            )}
             {folder.type === 'folder' && <FcFolder size={120} />}
 
             <div className="w-[115px] flex flex-col items-center">

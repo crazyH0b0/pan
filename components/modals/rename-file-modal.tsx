@@ -13,9 +13,12 @@ import { renameFileAction } from '@/actions/rename-file';
 import { File } from '@prisma/client';
 import { updateFileAction } from '@/store/use-files';
 import { toast } from 'sonner';
+
 const formSchema = z.object({
   filename: z.string().min(1).max(50),
 });
+
+// TODO: 改名的同时需要同时修改 postgresql 存储的文件 url
 const RenameFileModal = () => {
   const { type, isOpen, data, onClose } = useModalStore();
 
