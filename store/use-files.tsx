@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { File } from '@prisma/client';
-import { stat } from 'fs';
 import { revalidatePath } from 'next/cache';
 
 const initFilesState = {
@@ -36,8 +35,8 @@ export const addFileAction = (file: File) => {
   // useFilesStore.setState(state => {
   //   state.files.push(file)
   // })
-  revalidatePath('/pan/settings');
-  revalidatePath('/pan/list');
+  // revalidatePath('/pan/settings');
+  // revalidatePath('/pan/list');
   revalidatePath('/pan/image');
   revalidatePath('/pan/video');
   revalidatePath('/pan/music');

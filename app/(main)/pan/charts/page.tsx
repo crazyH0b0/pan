@@ -7,6 +7,7 @@ import { subDays, startOfDay, endOfDay, addDays, format } from 'date-fns';
 import Line from './line';
 import Example from './progress';
 import { getCookieCredential } from '@/utils/getCookieCredential ';
+import bytes from 'bytes';
 
 const ChartsPage = async () => {
   const user = await getCookieCredential();
@@ -72,11 +73,7 @@ const ChartsPage = async () => {
   }
 
   // 进度图
-  const totalStorageBytes = 50 * 1024 ** 3; // 50GB转换为字节
-  const totalUsedBytes = await prisma.file.aggregate({
-    _sum: {
-      size: true,
-    },
+  const totalUsedBytes = await prisma.file.findMany({
     where: {
       pan: {
         userId: user.id,
@@ -84,18 +81,28 @@ const ChartsPage = async () => {
       type: {
         not: 'folder',
       },
-      isDeleted: false,
     },
   });
+  const normalizedData = totalUsedBytes.map((file) => file.size).reduce((pre, current) => pre + current, 0);
+  // let convertedBytes = bytes(normalizedData); // 例如："155.79KB"
+  // const usedBytesMatch = convertedBytes.match(/\d+(\.\d+)?/);
+  // const usedBytesValue = usedBytesMatch ? parseFloat(usedBytesMatch[0]) : 0;
 
-  const usedBytes = totalUsedBytes._sum.size || 0;
-  const usedPercentage = (usedBytes / totalStorageBytes) * 100; // 计算百分比
-  let displayPercentage;
-  if (usedPercentage < 0.01) {
-    displayPercentage = '0.01'; // 如果小于0.01%，则显示为< 0.01%
-  } else {
-    displayPercentage = usedPercentage.toFixed(2); // 否则，四舍五入到两位小数
-  }
+  // console.log({ usedBytesValue });
+  // const usedPercentage = (usedBytesValue / (MAX * 1024 * 1024 * 1024)) * 100; // 计算百分比
+  // let displayPercentage;
+
+  // if (usedPercentage < 0.01) {
+  //   displayPercentage = '0.01';
+  // } else if (usedPercentage === 0) {
+  //   displayPercentage = '0.00';
+  // } else {
+  //   displayPercentage = usedPercentage.toFixed(2); // 否则，四舍五入到两位小数
+  // }
+
+  const maxCapacityGB = 3;
+  const totalSizeGB = normalizedData / (1024 * 1024 * 1024);
+  const usedSize = (totalSizeGB / maxCapacityGB) * 100;
 
   return (
     <ScrollArea className="h-[660px] w-full rounded-md border px-2 ">
@@ -116,7 +123,7 @@ const ChartsPage = async () => {
           <h3 className="text-lg font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
             网盘已用容量
           </h3>
-          <Example chartdata={displayPercentage} />
+          <Example chartdata={usedSize.toFixed(2)} />
         </div>
       </div>
     </ScrollArea>

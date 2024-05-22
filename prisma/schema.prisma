@@ -4,7 +4,7 @@
 datasource db {
   provider = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -24,6 +24,7 @@ model Pan {
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String @unique
   files    File[]
+  setting    Settings?
 }
 
 model File {
@@ -52,4 +53,11 @@ model Share {
   shareLink String?   @unique
   expiry    DateTime?
   createdAt DateTime @default(now())
+}
+
+model Settings {
+  id     String   @id @default(uuid())
+  pan    Pan?     @relation(fields: [panId], references: [id])
+  panId  String   @unique
+  capacity Int 
 }

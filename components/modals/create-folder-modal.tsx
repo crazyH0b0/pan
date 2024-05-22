@@ -46,8 +46,9 @@ const CreateFolderModal = () => {
       const folder = await createFolder(values.name, pId);
       form.reset();
       toast('文件夹创建成功');
-      addFileAction(folder);
+      // await addFileAction(folder);
     } catch (error) {
+      console.log(error);
       toast('文件夹创建失败');
     }
     // 更新表单的默认值
