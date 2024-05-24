@@ -28,7 +28,25 @@ export const renameFileAction = async (file: File, newName: string) => {
       method: 'POST',
       body: formData,
     });
+    const url = dbFile.url || '';
+    // 从URL中提取文件名
+    const fileNameStartIndex = url.lastIndexOf('/') + 1;
+    const fileNameEndIndex = url.indexOf('?'); // 文件名结束的位置是问号的位置
+    const fileName = url.substring(fileNameStartIndex, fileNameEndIndex);
+    const newUrl = url.replace(fileName, newName);
+
+    await prisma.file.update({
+      where: {
+        fileId: file.fileId,
+        panId: pan?.id,
+      },
+      data: {
+        name: newName,
+        url: newUrl,
+      },
+    });
   }
+
   const fileToUpdate = await prisma.file.update({
     where: {
       fileId: file.fileId,
