@@ -8,8 +8,10 @@ import Line from './line';
 import Example from './progress';
 import { getCookieCredential } from '@/utils/getCookieCredential ';
 import bytes from 'bytes';
+import { getCapacity } from '@/actions/file-size';
 
 const ChartsPage = async () => {
+  const maxSize = await getCapacity();
   const user = await getCookieCredential();
   // 条形图
   const fileTypeCounts = await prisma.file.groupBy({
@@ -100,12 +102,11 @@ const ChartsPage = async () => {
   //   displayPercentage = usedPercentage.toFixed(2); // 否则，四舍五入到两位小数
   // }
 
-  const maxCapacityGB = 3;
   const totalSizeGB = normalizedData / (1024 * 1024 * 1024);
-  let usedSize = (totalSizeGB / maxCapacityGB) * 100;
+  let usedSize = (totalSizeGB / maxSize) * 100;
   // 如果usedSize不为0或者小于1mb，则将usedSize设置为1
   if (usedSize !== 0 && usedSize < 1 / 1024) {
-    usedSize = 1;
+    usedSize = 0.01;
   }
   return (
     <ScrollArea className="h-[660px] w-full rounded-md border px-2 ">

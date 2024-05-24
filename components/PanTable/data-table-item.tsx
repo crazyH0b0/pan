@@ -67,14 +67,21 @@ const DataTableItem = ({ folder }: { folder: File }) => {
                 </PhotoView>
               </>
             )}
-            {(folder.type === 'txt' || folder.type === 'md' || folder.type === 'pdf' || folder.type === 'doc') && (
+            {(folder.type === 'docx' ||
+              folder.type === 'xml' ||
+              folder.type === 'pptx' ||
+              folder.type === 'ppt' ||
+              folder.type === 'txt' ||
+              folder.type === 'md' ||
+              folder.type === 'pdf' ||
+              folder.type === 'doc') && (
               <>
                 {/* <button onClick={() => setOpen(true)}>View PDF</button> */}
                 {/* {isOpen && <PdfViewer url={folder.url!} />} */}
                 <FcFile size={120} />
               </>
             )}
-            {(folder.type === 'mp4' || folder.type === 'VINEnc') && (
+            {(folder.type === 'mp4' || folder.type === 'VINEnc' || folder.type === 'mkv') && (
               <>
                 {/* <button className="btn-primary" onClick={() => setOpen(true)}>
         VIEW DEMO

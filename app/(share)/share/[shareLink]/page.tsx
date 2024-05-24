@@ -30,7 +30,7 @@ const sharePage = async ({ params }: { params: { shareLink: string } }) => {
 
   // 从查询结果中提取实体类
   const file = shareWithInfo?.file;
-  if (file?.isDeleted) {
+  if (file?.isDeleted || !shareWithInfo?.shareLink) {
     return <ShareFileDeleted />;
   }
 

@@ -12,11 +12,15 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { FileUpload } from './upload/file-upload';
+import { usePathname } from 'next/navigation';
 const UploadButton = () => {
+  const pathname = usePathname();
+  const canUpload = pathname.includes('/pan/list');
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="font-semibold text-lg">
+        <Button disabled={!canUpload} variant="outline" className="font-semibold text-lg">
           上传
         </Button>
       </DialogTrigger>

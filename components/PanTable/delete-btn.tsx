@@ -11,15 +11,26 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import { useFolderStore } from '@/store/use-folder';
-import { deleteFile } from '@/actions/deleteFile';
+import { deleteFile, recoverFile } from '@/actions/deleteFile';
 import { toast } from 'sonner';
+import { usePathname } from 'next/navigation';
 
 const DeleteBtn = () => {
+  const pathname = usePathname();
   const { selectedFolders } = useFolderStore();
   const onDelete = async () => {
+    console.log(pathname);
+
     try {
-      const res = await deleteFile(selectedFolders);
-      toast.success('删除成功');
+      if (pathname === '/pan/trash') {
+        console.log('我是恢复', selectedFolders);
+
+        const res = await recoverFile(selectedFolders);
+        toast.success('恢复成功~');
+      } else {
+        const res = await deleteFile(selectedFolders);
+        toast.success('删除成功~');
+      }
     } catch (error) {
       toast.error('删除失败');
     }
@@ -28,12 +39,16 @@ const DeleteBtn = () => {
     <Dialog>
       <DialogTrigger>
         <Button variant={'destructive'} size={'sm'}>
-          删除
+          {pathname === '/pan/trash' ? '恢复' : '删除'}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>你确定要删除这些文件吗?</DialogTitle>
+          <DialogTitle>
+            你确定要
+            {pathname === '/pan/trash' ? '恢复' : '删除'}
+            这些文件吗?
+          </DialogTitle>
         </DialogHeader>
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild>
