@@ -85,6 +85,16 @@ const UserTable = ({ data, users }: UserTableProps) => {
       toast.error('用户删除失败~');
     }
   };
+
+  const handleDownloadFile = (url: string) => {
+    const link = document.createElement('a');
+    link.href = url; // 设置下载链接地址
+    link.setAttribute('download', ''); // 添加download属性，指示浏览器下载
+    document.body.appendChild(link);
+    link.click(); // 模拟点击链接
+    document.body.removeChild(link); // 点击后移除链接
+  };
+
   // 非客户端
   if (!hydrated) {
     return <></>;
@@ -171,7 +181,9 @@ const UserTable = ({ data, users }: UserTableProps) => {
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>操作</DropdownMenuLabel>
-                                    <DropdownMenuItem>下载</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleDownloadFile(file.url)}>
+                                      下载
+                                    </DropdownMenuItem>
                                     <DropdownMenuItem
                                       onClick={async () => {
                                         try {

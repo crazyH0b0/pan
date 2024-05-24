@@ -102,8 +102,11 @@ const ChartsPage = async () => {
 
   const maxCapacityGB = 3;
   const totalSizeGB = normalizedData / (1024 * 1024 * 1024);
-  const usedSize = (totalSizeGB / maxCapacityGB) * 100;
-
+  let usedSize = (totalSizeGB / maxCapacityGB) * 100;
+  // 如果usedSize不为0或者小于1mb，则将usedSize设置为1
+  if (usedSize !== 0 && usedSize < 1 / 1024) {
+    usedSize = 1;
+  }
   return (
     <ScrollArea className="h-[660px] w-full rounded-md border px-2 ">
       <div className="w-full h-full grid grid-rows-2 grid-cols-2 gap-4 p-2">
