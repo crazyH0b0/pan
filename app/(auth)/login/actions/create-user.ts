@@ -23,9 +23,15 @@ export async function create(data: z.infer<typeof formSchema>) {
           password,
         },
       });
-      await prisma.pan.create({
+      const pan = await prisma.pan.create({
         data: {
           userId: newUser.id,
+        },
+      });
+      await prisma.settings.create({
+        data: {
+          panId: pan.id,
+          capacity: 3,
         },
       });
       return newUser; // 返回新创建的用户
