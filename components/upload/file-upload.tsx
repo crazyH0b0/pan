@@ -22,6 +22,13 @@ export const FileUpload = () => {
       setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
       const _progressInfos = [...progressInfos];
       acceptedFiles.forEach(async (file, index) => {
+        if (file.size > 3 * 1024 * 1024 * 1024) {
+          // Check if file size exceeds 3GB
+          _progressInfos[index] = { status: 'error', filename: file.name };
+          setIsUploading(false);
+          toast.error('文件超出限定大小，上传失败');
+          return; // Skip uploading this file
+        }
         _progressInfos[index] = { status: '', filename: '' };
         const formData = new FormData();
         formData.append('file', file);

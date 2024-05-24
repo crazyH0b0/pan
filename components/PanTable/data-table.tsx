@@ -24,7 +24,6 @@ interface DataTableDemoProps {
   panId: string;
 }
 
-// TODO: 改为服务端组件获取数据
 function DataTableDemo({ panId, slug, files }: DataTableDemoProps) {
   let type = usePathname().split('/')[2];
   // type = type === 'list' ? undefined : type;
